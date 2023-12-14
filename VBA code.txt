@@ -1,0 +1,222 @@
+Option Explicit
+
+Sub EmailasPDF()
+
+Dim EApp As Object
+Set EApp = CreateObject("Outlook.Application")
+
+Dim EItem As Object
+Set EItem = EApp.CreateItem(0)
+
+Dim invno As Long
+
+Dim custname As String
+
+Dim Amt As Currency
+
+Dim dt_issue As Date
+
+Dim term As Byte
+
+Dim path As String
+
+Dim fname As String
+Dim nextrec As Range
+
+invno = Range("C3")
+custname = Range("B10")
+Amt = Range("I41")
+dt_issue = Range("C5")
+term = Range("C6")
+path = "C:\Users\vivek\OneDrive\Desktop\Pp\"
+fname = invno & " - " & custname
+
+ActiveSheet.ExportAsFixedFormat Type:=xlTypePDF, ignoreprintareas:=False, Filename:=path & fname
+
+Set nextrec = Sheet3.Range("A1048576").End(xlUp).Offset(1, 0)
+
+nextrec = invno
+nextrec.Offset(0, 1) = custname
+nextrec.Offset(0, 2) = Amt
+nextrec.Offset(0, 3) = dt_issue
+nextrec.Offset(0, 4) = dt_issue + term
+nextrec.Offset(0, 8) = Now
+
+Sheet3.Hyperlinks.Add anchor:=nextrec.Offset(0, 6), Address:=path & fname & ".pdf"
+
+With EItem
+     .To = Range("B16")
+     .Subject = "Invoice no: " & invno
+     .Body = "Please find invoice attached. "
+     .Attachments.Add (path & fname & ".pdf")
+     .Display
+End With
+End Sub
+
+Sub SaveAsPdf()
+
+Dim invno As Long
+
+Dim custname As String
+
+Dim Amt As Currency
+
+Dim dt_issue As Date
+
+Dim term As Byte
+
+Dim path As String
+
+Dim fname As String
+Dim nextrec As Range
+
+invno = Range("C3")
+custname = Range("B10")
+Amt = Range("I41")
+dt_issue = Range("C5")
+term = Range("C6")
+path = "C:\Users\vivek\OneDrive\Desktop\Pp\"
+fname = invno & " - " & custname
+
+ActiveSheet.ExportAsFixedFormat Type:=xlTypePDF, ignoreprintareas:=False, Filename:=path & fname
+
+Set nextrec = Sheet3.Range("A1048576").End(xlUp).Offset(1, 0)
+
+nextrec = invno
+nextrec.Offset(0, 1) = custname
+nextrec.Offset(0, 2) = Amt
+nextrec.Offset(0, 3) = dt_issue
+nextrec.Offset(0, 4) = dt_issue + term
+
+Sheet3.Hyperlinks.Add anchor:=nextrec.Offset(0, 6), Address:=path & fname & ".pdf"
+
+End Sub
+
+
+
+
+Sub SaveInvAsExcel()
+
+Dim invno As Long
+
+Dim custname As String
+
+Dim Amt As Currency
+
+Dim dt_issue As Date
+
+Dim term As Byte
+
+Dim path As String
+
+Dim fname As String
+Dim nextrec As Range
+
+
+invno = Range("C3")
+
+custname = Range("B10")
+
+Amt = Range("I41")
+
+dt_issue = Range("C5")
+
+term = Range("C6")
+
+path = "C:\Users\vivek\OneDrive\Desktop\Pp\"
+
+fname = invno & "-" & custname
+
+
+'copy the invoice sheet to a new workbook
+
+Sheet1.Copy
+
+'then delete all the buttons on the worksheet
+
+Dim shp As Shape
+
+For Each shp In ActiveSheet.Shapes
+
+   shp.Delete
+
+
+Next shp
+
+'save the new workbook to a specified folder
+With ActiveWorkbook
+
+     .Sheets(1).Name = "Invoice"
+
+     .SaveAs Filename:=path & fname, FileFormat:=51
+
+     .Close
+
+End With
+
+'need to put the details of the invoice in the record of invoices sheet
+
+Set nextrec = Sheet3.Range("A1048576").End(xlUp).Offset(1, 0)
+
+nextrec = invno
+nextrec.Offset(0, 1) = custname
+nextrec.Offset(0, 2) = Amt
+nextrec.Offset(0, 3) = dt_issue
+nextrec.Offset(0, 4) = dt_issue + term
+
+Sheet3.Hyperlinks.Add anchor:=nextrec.Offset(0, 7), Address:=path & fname & ".xlsx"
+
+
+
+
+End Sub
+
+
+
+
+Sub CreateNewInvoice()
+
+Dim invno As Long
+
+invno = Range("C3")
+
+Range("C4:D4,B10,B19:G35").ClearContents
+
+MsgBox "Your next invoice number is " & invno + 1
+
+Range("C3") = invno + 1
+
+Range("B10").Select
+
+ThisWorkbook.Save
+
+End Sub
+
+
+Sub RecordofInvoice()
+
+Dim invno As Long
+Dim custname As String
+Dim Amt As Currency
+Dim dt_issue As Date
+Dim term As Byte
+Dim nextrec As Range
+
+invno = Range("C3")
+custname = Range("B10")
+Amt = Range("I41")
+dt_issue = Range("C5")
+term = Range("C6")
+
+Set nextrec = Sheet3.Range("A1048576").End(xlUp).Offset(1, 0)
+
+nextrec = invno
+nextrec.Offset(0, 1) = custname
+nextrec.Offset(0, 2) = Amt
+nextrec.Offset(0, 3) = dt_issue
+nextrec.Offset(0, 4) = dt_issue + term
+
+
+
+
+End Sub
